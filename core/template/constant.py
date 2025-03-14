@@ -23,3 +23,14 @@ class OptionType(Enum):
     """
     CALL = "看涨期权"
     PUT = "看跌期权"
+
+
+class Interval(Enum):
+    """
+    K线周期
+    """
+    MINUTE = "1m"
+    HOUR = "1h"
+    DAILY = "1d"
+    WEEKLY = "1w"
+    TICK = "tick"

@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 from datetime import datetime
 
-from core.template.constant import Exchange, Product, OptionType
+from core.template.constant import Exchange, Product, OptionType, Interval
 
 
 @dataclass
@@ -20,8 +20,6 @@ class BaseData:
     gateway_name: str
 
     extra: Optional[dict] = field(default=None, init=False)
-
-
 
 
 @dataclass
@@ -70,6 +68,31 @@ class TickData(BaseData):
     ask_volume_5: float = 0
 
     def __post_init__(self) -> None:
+        self.virtual_symbol: str = f"{self.symbol}.{self.exchange.value}"
+
+
+@dataclass
+class KLineData(BaseData):
+    """
+    Candlestick data of a certain trading period.
+    """
+
+    symbol: str
+    exchange: Exchange
+    exchange_time: datetime.timestamp
+    local_time: datetime.timestamp
+
+    interval: Interval = None
+    volume: float = 0
+    turnover: float = 0
+    open_interest: float = 0
+    open_price: float = 0
+    high_price: float = 0
+    low_price: float = 0
+    close_price: float = 0
+
+    def __post_init__(self) -> None:
+        """"""
         self.virtual_symbol: str = f"{self.symbol}.{self.exchange.value}"
 
 
