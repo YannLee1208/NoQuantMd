@@ -4,7 +4,7 @@ from loguru import logger
 
 from core.binance.spot.rest import BinanceSpotDataRestAPi
 from core.constant.data import DATA_BASE_DIR
-from core.constant.object import Interval
+from core.constant.object import Interval, Exchange
 from core.utils.constant import Env
 from core.utils.date import cal_date_interval
 
@@ -19,7 +19,7 @@ def fetch_all_klines(start_trading_day: str, end_trading_day: str,
     :param interval: k线周期
     :return: None
     """
-    data_dir = os.path.join(DATA_BASE_DIR, symbol, interval.value)
+    data_dir = os.path.join(DATA_BASE_DIR, Exchange.BINANCE.value, "spot", symbol, interval.value)
     if not os.path.exists(data_dir):
         os.makedirs(data_dir)
 
@@ -38,7 +38,7 @@ def fetch_all_klines(start_trading_day: str, end_trading_day: str,
             break
         klines["TradingDay"] = day
         # 保存到CSV文件
-        file_path = os.path.join(data_dir, f"{day}.csv")
+        file_path = os.path.join(data_dir, f"{day}_klines.csv")
         logger.info(f"{day}的K线数据大小: {klines.shape}")
         klines.to_csv(file_path, index=False)
 
@@ -48,6 +48,6 @@ if __name__ == '__main__':
     start_date = "2024-01-01"
     end_date = "2024-12-31"
 
-    intervals = [Interval.DAILY]
+    intervals = [Interval.MINUTE]
     for interval in intervals:
         fetch_all_klines(start_date, end_date, symbol, interval)
