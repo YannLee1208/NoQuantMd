@@ -8,8 +8,7 @@ import json
 from datetime import datetime
 from loguru import logger
 
-from core.binance.spot.gateway import BinanceSpotGateway
-from core.template.constant import Exchange, Interval
+from core.constant.object import Exchange, Interval
 from core.template.object import TickData, SubscribeRequest, KLineData
 from core.template.websocket_client import WebsocketClient
 from core.utils.constant import Env
@@ -29,11 +28,10 @@ KLINE_INTERVAL = Interval.MINUTE  # 和上面的CHANNELS对应
 
 class BinanceSpotDataWebsocketApi(WebsocketClient):
 
-    def __init__(self, gateway: BinanceSpotGateway):
+    def __init__(self):
         super(BinanceSpotDataWebsocketApi, self).__init__()
 
-        self.gateway = gateway
-        self.gateway_name = gateway.gateway_name
+        self.gateway_name = "binance_spot_data_ws"
 
         self.ticks: dict[str, TickData] = {}
         self.req_id: int = 0
@@ -61,18 +59,18 @@ class BinanceSpotDataWebsocketApi(WebsocketClient):
             exchange=Exchange.BINANCE,
             local_time=datetime.now().timestamp(),
             exchange_time=datetime.now().timestamp(),
-            gateway_name=gateway_name
+            gateway_name=self.gateway_name
         )
 
         tick.extra = {}
         self.ticks[req.symbol] = tick
 
-        # 仅在连接活跃时发送订阅
+        # 仅在连接活跃时发送订阅，否则将会在连接后自动订阅
         if not self.active or not self.websocket_app:
             self.pending_subscriptions.append(req)
             return
 
-        # Otherwise send the subscription immediately
+        # 发送订阅请求
         self._send_subscription(req)
 
     def _send_subscription(self, req: SubscribeRequest):
@@ -88,7 +86,7 @@ class BinanceSpotDataWebsocketApi(WebsocketClient):
 
     def on_open(self):
         """
-        Callback when connection is opened.
+        当websocket连接建立时调用
         """
         logger.info(f"{self.gateway_name} websocket connection established.")
 
@@ -99,7 +97,7 @@ class BinanceSpotDataWebsocketApi(WebsocketClient):
 
     def on_message(self, message: str):
         """
-        Callback when message is received.
+        当websocket收到消息时调用
         :param message: str，默认使用json格式的字符串
         """
         data = json.loads(message)
@@ -165,8 +163,7 @@ class BinanceSpotDataWebsocketApi(WebsocketClient):
 
 
 if __name__ == '__main__':
-    gateway_name = "binance_spot"
-    ws_client = BinanceSpotDataWebsocketApi(BinanceSpotGateway(gateway_name))
+    ws_client = BinanceSpotDataWebsocketApi()
 
     symbols = ["btcusdt", "ethusdt"]
 

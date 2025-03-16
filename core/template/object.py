@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from typing import Optional
 from datetime import datetime
 
-from core.template.constant import Exchange, Product, OptionType, Interval
+from core.constant.object import Exchange, Product, OptionType, Interval
 
 
 @dataclass
@@ -85,11 +85,14 @@ class KLineData(BaseData):
     interval: Interval = None
     volume: float = 0
     turnover: float = 0
-    open_interest: float = 0
-    open_price: float = 0
-    high_price: float = 0
-    low_price: float = 0
-    close_price: float = 0
+    open_interest: float = 0  # 持仓量，对于spot market，该值为0
+    open: float = 0
+    high: float = 0
+    low: float = 0
+    close: float = 0
+    taker_buy_base_asset_volume: float = 0  # 买入交易量
+    taker_buy_quote_asset_volume: float = 0  # 买入交易额
+    number_of_trades: int = 0  # 交易次数
 
     def __post_init__(self) -> None:
         """"""

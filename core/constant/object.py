@@ -1,10 +1,9 @@
 """
 coding=utf-8
-@File   : constant
+@File   : object
 @Author : LiHan
-@Time   : 3/12/25:2:58 PM
+@Time   : 3/16/25:3:48 PM
 """
-
 from enum import Enum
 
 
@@ -33,4 +32,5 @@ class Interval(Enum):
     HOUR = "1h"
     DAILY = "1d"
     WEEKLY = "1w"
+    SECOND = "1s"
     TICK = "tick"

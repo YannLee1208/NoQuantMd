@@ -1,3 +1,10 @@
+"""
+coding=utf-8
+@File   : clickhouse
+@Author : LiHan
+@Time   : 3/16/25:3:49 PM
+"""
+
 DATABASE_KLINE = "kline"
 
 INTERVAL_TABLE_MAPPING = {
