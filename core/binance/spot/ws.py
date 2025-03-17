@@ -8,9 +8,9 @@ import json
 from datetime import datetime
 from loguru import logger
 
-from core.constant.object import Exchange, Interval
-from core.template.object import TickData, SubscribeRequest, KLineData
-from core.template.websocket_client import WebsocketClient
+from external.object import Exchange, Interval
+from external.object import TickData, SubscribeRequest, KLineData
+from external.websocket_client import WebsocketClient
 from core.utils.constant import Env
 
 WEBSOCKET_DATA_HOST: dict[Env, str] = {

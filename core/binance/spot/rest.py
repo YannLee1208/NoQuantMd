@@ -10,8 +10,8 @@ from enum import Enum
 from loguru import logger
 import pandas as pd
 
-from core.constant.object import Exchange, Interval
-from core.template.rest import RestClient, RestRequest
+from external.object import Exchange, Interval
+from external.rest import RestClient, RestRequest
 from core.utils.constant import Env
 
 REST_API_DATA_BASE_URL: dict[Env, str] = {
