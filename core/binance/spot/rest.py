@@ -7,12 +7,13 @@ coding=utf-8
 import time
 from datetime import datetime, timezone
 from enum import Enum
-from loguru import logger
+
 import pandas as pd
 
+from core.utils.constant import Env
+from external.log import logger
 from external.object import Exchange, Interval
 from external.rest import RestClient, RestRequest
-from core.utils.constant import Env
 
 REST_API_DATA_BASE_URL: dict[Env, str] = {
     Env.PROD: "https://data-api.binance.vision",

@@ -6,12 +6,12 @@ coding=utf-8
 """
 import json
 from datetime import datetime
-from loguru import logger
 
+from core.utils.constant import Env
+from external.log import logger
 from external.object import Exchange, Interval
 from external.object import TickData, SubscribeRequest, KLineData
 from external.websocket_client import WebsocketClient
-from core.utils.constant import Env
 
 WEBSOCKET_DATA_HOST: dict[Env, str] = {
     # Env.PROD: "wss://data-stream.binance.vision:443/ws",

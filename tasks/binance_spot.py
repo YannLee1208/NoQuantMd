@@ -1,12 +1,12 @@
 import os
 from datetime import datetime, timezone
-from loguru import logger
 
 from core.binance.spot.rest import BinanceSpotDataRestAPi
-from core.constant.data import DATA_BASE_DIR
-from core.constant.object import Interval, Exchange
 from core.utils.constant import Env
 from core.utils.date import cal_date_interval
+from external.constant import DATA_BASE_DIR
+from external.log import logger
+from external.object import Interval, Exchange
 
 
 def fetch_all_klines(start_trading_day: str, end_trading_day: str,
