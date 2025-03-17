@@ -74,7 +74,7 @@ class TickData(BaseData):
 @dataclass
 class KLineData(BaseData):
     """
-    Candlestick data of a certain trading period.
+    K线数据类
     """
 
     symbol: str
@@ -100,34 +100,25 @@ class KLineData(BaseData):
 
 
 @dataclass
-class ContractData(BaseData):
+class AggTradesData(BaseData):
     """
-    Contract data contains basic information about each contract traded.
+    Aggregate trades data from Binance.
     """
-
     symbol: str
     exchange: Exchange
-    name: str
-    product: Product
-    size: float
-    price_tick: float
+    local_time: int = 0  # Local system timestamp
 
-    min_volume: float = 1  # minimum order volume
-    max_volume: float = None  # maximum order volume
-    stop_supported: bool = False  # whether server supports stop order
-    net_position: bool = False  # whether gateway uses net position volume
-    history_data: bool = False  # whether gateway provides bar history data
-
-    option_strike: float = 0
-    option_underlying: str = ""  # vt_symbol of underlying contract
-    option_type: OptionType = None
-    option_listed: datetime = None
-    option_expiry: datetime = None
-    option_portfolio: str = ""
-    option_index: str = ""  # for identifying options with same strike price
+    agg_trade_id: int = 0  # Aggregate trade ID
+    price: float = 0  # Trade price
+    volume: float = 0  # Trade quantity
+    turnover: float = 0  # Total value (price * quantity)
+    first_trade_id: int = 0  # First trade ID in the aggregate
+    last_trade_id: int = 0  # Last trade ID in the aggregate
+    trade_timestamp: int = 0  # Trade timestamp (milliseconds)
+    is_buyer_maker: bool = False  # Was the buyer the maker?
+    is_best_price_match: bool = False  # Was trade executed at the best price?
 
     def __post_init__(self) -> None:
-        """"""
         self.virtual_symbol: str = f"{self.symbol}.{self.exchange.value}"
 
 

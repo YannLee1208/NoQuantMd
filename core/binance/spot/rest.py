@@ -278,10 +278,10 @@ class BinanceSpotDataRestAPi(RestClient):
         df.rename(columns={
             "a": "AggTradeId",
             "p": "Price",
-            "q": "Quantity",
+            "q": "Volume",
             "f": "FirstTradeId",
             "l": "LastTradeId",
-            "T": "Timestamp",
+            "T": "TradeTimestamp",
             "m": "IsBuyerMaker",
             "M": "IsBestPriceMatch"
         }, inplace=True)
@@ -289,7 +289,7 @@ class BinanceSpotDataRestAPi(RestClient):
         # 转换数据类型
         df["Price"] = df["Price"].astype(float)
         df["Quantity"] = df["Quantity"].astype(float)
-        df["Value"] = df["Price"] * df["Quantity"]
+        df["Turnover"] = df["Price"] * df["Quantity"]
         df["LocalTime"] = int(datetime.now().timestamp() * 1000)
 
         return df
