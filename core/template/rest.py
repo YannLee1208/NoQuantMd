@@ -125,7 +125,7 @@ class RestClient:
                     headers: dict = None, on_failed: ON_FAILED_TYPE = None,
                     on_error: ON_ERROR_TYPE = None):
         """
-        添加请求
+        添加请求，异步非阻塞
         :param method: 请求方法，如：GET、POST
         :param path: 请求路径，如：/api/v1/ping
         :param params: 请求参数
