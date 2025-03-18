@@ -11,9 +11,9 @@ from enum import Enum
 import pandas as pd
 
 from core.utils.constant import Env
-from external.log import logger
 from external.object import Exchange, Interval
-from external.rest import RestClient, RestRequest
+from external.rest.rest import RestClient, RestRequest
+from external.utils.log import logger
 
 REST_API_DATA_BASE_URL: dict[Env, str] = {
     Env.PROD: "https://data-api.binance.vision",
