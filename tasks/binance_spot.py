@@ -2,9 +2,8 @@ import os
 from datetime import datetime, timezone
 
 from core.binance.spot.rest import BinanceSpotDataRestAPi
-from core.utils.constant import Env
-from external.config import global_config
-from external.object import Interval, Exchange
+from external.common.config import global_config
+from external.common.object import Interval, Exchange
 from external.utils.date import cal_date_interval
 from external.utils.log import logger
 
@@ -27,7 +26,7 @@ def fetch_all_klines(start_trading_day: str, end_trading_day: str,
         os.makedirs(data_dir)
 
     rest_api = BinanceSpotDataRestAPi()
-    rest_api.connect(Env.PROD, "", 0)
+    rest_api.connect("", 0)
 
     days = cal_date_interval(start_trading_day, end_trading_day)
     for day in days:
@@ -62,7 +61,7 @@ def fetch_agg_traders(start_trading_day: str, end_trading_day: str,
         os.makedirs(data_dir)
 
     rest_api = BinanceSpotDataRestAPi()
-    rest_api.connect(Env.PROD, "", 0)
+    rest_api.connect("", 0)
 
     days = cal_date_interval(start_trading_day, end_trading_day)
     for day in days:
@@ -96,7 +95,7 @@ def fetch_trading_day_ticker(trading_day: str, symbol: str, store_dir: str, tick
         os.makedirs(data_dir)
 
     rest_api = BinanceSpotDataRestAPi()
-    rest_api.connect(Env.PROD, "", 0)
+    rest_api.connect("", 0)
 
     logger.info(f"获取{trading_day}的交易日价格统计数据")
     ticker_data = rest_api.query_trading_day_ticker(symbol, ticker_type)
@@ -122,7 +121,7 @@ if __name__ == '__main__':
         exit(1)
 
     symbol = 'BTCUSDT'  # 交易对
-    start_date = "2025-03-15"
+    start_date = "2025-03-18"
     end_date = "2025-03-18"
 
     intervals = [Interval.MINUTE]

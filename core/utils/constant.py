@@ -6,7 +6,10 @@ coding=utf-8
 """
 from enum import Enum
 
+WEBSOCKET_RECEIVE_TIMEOUT_SECOND = 24 * 60 * 60
 
-class Env(Enum):
-    TEST = 'test'
-    PROD = 'prod'
+
+class Security(Enum):
+    NONE = 0
+    SIGNED = 1
+    API_KEY = 2

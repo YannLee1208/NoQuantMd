@@ -7,22 +7,13 @@ coding=utf-8
 import json
 from datetime import datetime
 
-from core.utils.constant import Env
-from external.object import Exchange, Interval
-from external.object import TickData, SubscribeRequest, KLineData
+from core.utils.constant import WEBSOCKET_RECEIVE_TIMEOUT_SECOND
+from external.common.env import WEBSOCKET_DATA_HOST
+from external.common.object import Exchange, Interval, TickData, SubscribeRequest, KLineData
 from external.utils.log import logger
 from external.websocket.websocket_client import WebsocketClient
 
-WEBSOCKET_DATA_HOST: dict[Env, str] = {
-    # Env.PROD: "wss://data-stream.binance.vision:443/ws",
-    Env.PROD: "wss://stream.binance.com:9443/stream",
-    Env.TEST: "wss://testnet.binance.vision/ws/"
-}
-
-WEBSOCKET_RECEIVE_TIMEOUT_SECOND = 24 * 60 * 60
-
 CHANNELS = ["ticker", "depth10", "kline_1m"]
-# CHANNELS = ["ticker", "depth10"]
 KLINE_INTERVAL = Interval.MINUTE  # 和上面的CHANNELS对应
 
 
@@ -37,8 +28,8 @@ class BinanceSpotDataWebsocketApi(WebsocketClient):
         self.req_id: int = 0
         self.pending_subscriptions: list[SubscribeRequest] = []
 
-    def connect(self, env: Env, proxy_host: str, proxy_port: int):
-        host = WEBSOCKET_DATA_HOST[env]
+    def connect(self, proxy_host: str, proxy_port: int):
+        host = WEBSOCKET_DATA_HOST
         self.init(
             host=host,
             proxy_host=proxy_host,
@@ -151,25 +142,12 @@ class BinanceSpotDataWebsocketApi(WebsocketClient):
                     interval=KLINE_INTERVAL,
                     volume=float(kline_data['v']),
                     turnover=float(kline_data['q']),
-                    open_price=float(kline_data['o']),
-                    high_price=float(kline_data['h']),
-                    low_price=float(kline_data['l']),
-                    close_price=float(kline_data['c']),
+                    open=float(kline_data['o']),
+                    high=float(kline_data['h']),
+                    low=float(kline_data['l']),
+                    close=float(kline_data['c']),
                     gateway_name=self.gateway_name
                 )
             else:
                 logger.error(f"{self.gateway_name} unknown data received: {data}")
                 return
-
-
-if __name__ == '__main__':
-    ws_client = BinanceSpotDataWebsocketApi()
-
-    symbols = ["btcusdt", "ethusdt"]
-
-    ws_client.connect(Env.PROD, "", 0)
-
-    for symbol in symbols:
-        sub_req = SubscribeRequest(symbol=symbol, exchange=Exchange.BINANCE)
-        ws_client.subscribe(sub_req)
-    ws_client.join()

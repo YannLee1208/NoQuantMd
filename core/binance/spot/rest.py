@@ -5,28 +5,16 @@ coding=utf-8
 @Time   : 3/16/25:12:50 PM
 """
 import time
-from datetime import datetime, timezone
-from enum import Enum
+from datetime import datetime
 
 import pandas as pd
 
-from core.utils.constant import Env
-from external.object import Exchange, Interval
+from core.utils.constant import Security
+from external.common.constant import API_LIMIT_ONE_TIME
+from external.common.env import REST_API_DATA_BASE_URL
+from external.common.object import Exchange, Interval
 from external.rest.rest import RestClient, RestRequest
 from external.utils.log import logger
-
-REST_API_DATA_BASE_URL: dict[Env, str] = {
-    Env.PROD: "https://data-api.binance.vision",
-    Env.TEST: "https://testnet.binance.vision"
-}
-
-API_LIMIT_ONE_TIME = 1000
-
-
-class Security(Enum):
-    NONE = 0
-    SIGNED = 1
-    API_KEY = 2
 
 
 class BinanceSpotDataRestAPi(RestClient):
@@ -37,10 +25,9 @@ class BinanceSpotDataRestAPi(RestClient):
         self.time_offset = 0  # 服务器时间偏移, 毫秒
 
     def connect(
-            self, env: Env, proxy_host: str, proxy_port: int):
-        url_base = REST_API_DATA_BASE_URL[env]
+            self, proxy_host: str, proxy_port: int):
         self.init(
-            url_base=url_base,
+            url_base=REST_API_DATA_BASE_URL,
             proxy_host=proxy_host,
             proxy_port=proxy_port,
         )
@@ -403,22 +390,3 @@ class BinanceSpotDataRestAPi(RestClient):
         self.time_offset = local_time - server_time
 
         logger.info(f"Server time updated, local offset: {self.time_offset}ms")
-
-
-if __name__ == '__main__':
-    rest_api = BinanceSpotDataRestAPi()
-
-    rest_api.connect(Env.PROD, "", 0)
-
-    # time.sleep(10)
-    print(f"Time offset: {rest_api.time_offset}")
-
-    day = "2025-03-15"
-    symbol = "BTCUSDT"
-    interval = Interval.SECOND
-
-    start_timestamp = int(datetime.strptime(day, "%Y-%m-%d").replace(tzinfo=timezone.utc).timestamp() * 1000)
-    end_timestamp = start_timestamp + 24 * 60 * 60 * 1000 - 1  # 一天的时间戳范围
-
-    res = rest_api.query_kline(symbol, interval, start_timestamp, end_timestamp)
-    print(res)
